@@ -1,14 +1,23 @@
-import { Controller, Request, Post, Body, UseGuards, Get } from '@nestjs/common';
+import {
+  Controller,
+  Request,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+} from '@nestjs/common';
 import { CreateUserDto } from './users/dto/create-user.dto';
 import { UsersService } from './users/users.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/auth/auth.service';
 
+@ApiTags('Auth')
 @Controller()
 export class AppController {
   constructor(
     private readonly usersService: UsersService,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   @Get()
