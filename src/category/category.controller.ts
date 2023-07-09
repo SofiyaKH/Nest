@@ -7,11 +7,15 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { LoggingInterceptor } from 'src/interceptors/logging.interceptor';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadedFile } from '@nestjs/common';
 
 @ApiTags('Categories')
 @Controller('category')
@@ -29,6 +33,7 @@ export class CategoryController {
   }
 
   @Get(':id')
+  @UseInterceptors(LoggingInterceptor)
   findOne(@Param('id', ParseIntPipe) id: string) {
     return this.categoryService.findOne(+id);
   }
@@ -44,5 +49,11 @@ export class CategoryController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.categoryService.remove(+id);
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
   }
 }
