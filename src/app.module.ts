@@ -2,13 +2,15 @@ import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersController } from './users/users.controller';
 import { CategoryModule } from './category/category.module';
 import { PostsModule } from './posts/posts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Category } from './category/entities/category.entity';
 import { Post } from './posts/entities/post.entity';
+import { User } from './users/entities/user.entity';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,11 +23,13 @@ import { Post } from './posts/entities/post.entity';
       port: 3306,
       username: process.env.DB_USER,
       database: process.env.DB_DBNAME,
-      entities: [Category, Post],
+      entities: [Category, Post, User],
       synchronize: true,
     }),
+    UsersModule,
+    AuthModule,
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {

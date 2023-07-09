@@ -1,20 +1,21 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Body, Patch, Param, Delete, Request } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { UpdateUserDto } from './dto/update-user.dto';
+
 
 @Controller('users')
 export class UsersController {
-  users = [
-    { id: 1, name: 'User 1' },
-    { id: 2, name: 'User 2' },
-  ];
+  constructor(
+    private readonly usersService: UsersService
+  ) {}
 
-  @Get()
-  getAll(): { name: string; id: number }[] {
-    return this.users;
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.update(+id, updateUserDto);
   }
 
-  @Get(':id') findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): { name: string; id: number } | null {
-    return this.users.find((user) => user.id == id);
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(+id);
   }
 }
